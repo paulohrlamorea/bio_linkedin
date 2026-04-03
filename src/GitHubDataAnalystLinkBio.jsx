@@ -9,6 +9,8 @@ const cards = [
     title: "Minha Decisão, LinkedIn.",
     subtitle: "Um recorte do meu posicionamento, da minha visão profissional e da direção que escolhi seguir.",
     href: "https://www.linkedin.com/in/paulo-lamorea/",
+    androidAppHref:
+      "intent://www.linkedin.com/in/paulo-lamorea/#Intent;scheme=https;package=com.linkedin.android;end",
     cta: "Acessar LinkedIn",
     icon: Briefcase,
     variant: "default",
@@ -36,9 +38,41 @@ const cards = [
   },
 ];
 
+function isAndroidDevice() {
+  if (typeof navigator === "undefined") {
+    return false;
+  }
+
+  return /Android/i.test(navigator.userAgent);
+}
+
 function DefaultCard({ card }) {
   const Icon = card.icon;
   const isExternal = card.href.startsWith("http");
+
+  function handleClick(event) {
+    if (!card.androidAppHref || !isAndroidDevice()) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const fallbackTimer = window.setTimeout(() => {
+      window.location.href = card.href;
+    }, 900);
+
+    const clearFallback = () => {
+      window.clearTimeout(fallbackTimer);
+      document.removeEventListener("visibilitychange", clearFallback);
+      window.removeEventListener("pagehide", clearFallback);
+      window.removeEventListener("blur", clearFallback);
+    };
+
+    document.addEventListener("visibilitychange", clearFallback, { once: true });
+    window.addEventListener("pagehide", clearFallback, { once: true });
+    window.addEventListener("blur", clearFallback, { once: true });
+    window.location.href = card.androidAppHref;
+  }
 
   return (
     <a
@@ -46,6 +80,7 @@ function DefaultCard({ card }) {
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noreferrer" : undefined}
       className="bio-card bio-card-default"
+      onClick={handleClick}
     >
       <div className="bio-card-overlay" />
 
