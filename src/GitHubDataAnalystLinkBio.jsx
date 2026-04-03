@@ -1,7 +1,7 @@
 import { ArrowUpRight, Briefcase, FolderKanban, Wrench } from "lucide-react";
 import "./GitHubDataAnalystLinkBio.css";
-import profileImage from "./assets/paulo-profile-v2.png";
-import linkedinCardArt from "./assets/linkedin-card-art.png";
+import profileImage from "./assets/paulo-profile.jpg";
+import linkedinCardArt from "./assets/linkedin-card-art.svg";
 import projectsCardArt from "./assets/projects-card-art.svg";
 
 const cards = [
@@ -50,7 +50,7 @@ function DefaultCard({ card }) {
       <div className="bio-card-overlay" />
 
       <div className={`bio-card-image ${card.imageClass || ""}`}>
-        <img src={card.image} alt={card.imageAlt} />
+        <img src={card.image} alt={card.imageAlt} loading="lazy" decoding="async" />
         <div className="bio-card-image-shine" />
         <div className="bio-card-image-fade" />
       </div>
@@ -108,7 +108,13 @@ export default function GitHubDataAnalystLinkBio() {
             <div className="bio-header">
               <div className="bio-avatar-wrap">
                 <div className="bio-avatar-glow" />
-                <img src={profileImage} alt="Foto de Paulo" className="bio-avatar" />
+                <img
+                  src={profileImage}
+                  alt="Foto de Paulo"
+                  className="bio-avatar"
+                  fetchPriority="high"
+                  decoding="async"
+                />
               </div>
 
               <span className="bio-badge">Dados • Projetos • Evolução</span>
